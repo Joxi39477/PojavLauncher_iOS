@@ -1,5 +1,6 @@
 
 
+
 workflows:
   pojavlauncher-ios-build:
     name: Build PojavLauncher with Java 21
@@ -7,21 +8,18 @@ workflows:
       vars:
         JAVA_VERSION: "21"
         RUNTIME_PATH: "$CM_BUILD_DIR/java21"
-      ios_signing:
-        provisioning_profiles:
-          - pojavlaunch-profile
-        certificates:
-          - pojavlaunch-cert
-      xcode: latest
     scripts:
-      - name: Set up Java 21 Runtime
+      - name: Inject Java Runtime
         script: |
           mkdir -p $RUNTIME_PATH
           cp -R $CM_SOURCE_DIR/java21/* $RUNTIME_PATH/
-      - name: Build App
+          echo "Injected Java 21 to $RUNTIME_PATH"
+      - name: Build App with Xcode
         script: |
+          cd ios
           xcodebuild -workspace PojavLauncher.xcworkspace \
             -scheme PojavLauncher \
+            -sdk iphoneos \
             -configuration Release \
             CODE_SIGN_IDENTITY="Apple Development" \
             PROVISIONING_PROFILE_SPECIFIER="pojavlaunch-profile"
