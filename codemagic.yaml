@@ -1,0 +1,29 @@
+
+
+
+
+
+workflows:
+  ios-workflow:
+    name: Build modded PojavLauncher
+    environment:
+      vars:
+        XCODE_WORKSPACE: "PojavLauncher.xcodeproj"
+        XCODE_SCHEME: "PojavLauncher"
+      ios_signing:
+        distribution_type: ad-hoc
+        bundle_identifier: com.your.bundle.id
+    scripts:
+      - name: Build IPA
+        script: |
+          xcodebuild -workspace $XCODE_WORKSPACE \
+                     -scheme $XCODE_SCHEME \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     archive -archivePath build/PojavLauncher.xcarchive
+          xcodebuild -exportArchive \
+                     -archivePath build/PojavLauncher.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath build/IPA
+    artifacts:
+      - build/IPA/*.ipa
