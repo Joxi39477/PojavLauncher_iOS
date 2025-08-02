@@ -1,4 +1,6 @@
 
+
+
 workflows:
   build_pojavlauncher:
     name: "Build PojavLauncher with Java 21"
@@ -27,7 +29,7 @@ workflows:
     artifacts:
       - $BUILD_DIR/build/PojavLauncher.ipa
 
-    **ios:**  # ✅ This belongs directly under the workflow block
+    ios:
       build_settings:
         method: development
         export_options:
@@ -36,4 +38,3 @@ workflows:
           signingStyle: automatic
           provisioningProfiles:
             net.kdt.pojavlaunch: "Your_Dev_Profile_Name"
-
