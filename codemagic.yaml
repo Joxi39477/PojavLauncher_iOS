@@ -1,26 +1,30 @@
 
-
-
-
 workflows:
-  build_pojavlauncher_ios:
+  ios-build:
     name: Build PojavLauncher iOS
     environment:
       vars:
         JAVA_VERSION: "21"
+        CONTROLS_LAYOUT: "pe"
+      ios_signing:
+        distribution_type: ad-hoc
+        bundle_identifier: net.kdt.pojavlaunch
     scripts:
       - name: Inject Java runtime and control layout
         script: |
-          echo "Using Java version $JAVA_VERSION"
+          echo "Using Java version $JAVA_VERSION and layout $CONTROLS_LAYOUT"
           mkdir -p $CM_BUILD_DIR/resources/java$JAVA_VERSION
           cp -R resources/java$JAVA_VERSION/* $CM_BUILD_DIR/PojavLauncher/app/src/main/java
-          cp layout/pe_controls.json $CM_BUILD_DIR/PojavLauncher/app/src/main/assets/controls.json
+          cp layout/${CONTROLS_LAYOUT}_controls.json $CM_BUILD_DIR/PojavLauncher/app/src/main/assets/controls.json
+
       - name: Build with Xcode
         script: |
-          xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher -configuration Release build
+          xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher \
+            -configuration Release archive -archivePath $CM_BUILD_DIR/PojavLauncher.xcarchive
+          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/PojavLauncher.xcarchive \
+            -exportOptionsPlist ExportOptions.plist -exportPath $CM_BUILD_DIR/build
+
     artifacts:
       - build/PojavLauncher.ipa
-    ios_signing:
-      distribution_type: ad-hoc
-      bundle_identifier: net.kdt.pojavlaunch
+
 
