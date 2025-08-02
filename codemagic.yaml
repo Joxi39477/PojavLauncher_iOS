@@ -1,34 +1,34 @@
 
-
 workflows:
-  ios-build:
-    name: Build PojavLauncher with Java 21
+  ios-workflow:
+    name: Build PojavLauncher iOS
+    vars:
+      JAVA_VERSION: "21"
+      CONTROLS_LAYOUT: "pe"
     environment:
       ios_signing:
         distribution_type: ad-hoc
-        bundle_identifier: com.joxi39477.pojavlauncher
-      vars:
-        XCODE_PROJECT: "PojavLauncher.xcodeproj"
-        XCODE_SCHEME: "PojavLauncher"
-    scripts:
-      - name: Pre-build – Inject Java & Controls
-        script: |
-          echo "Injecting Java 21 runtime and PE layout..."
-          cp -R resources/java21/* $FCI_BUILD_DIR/PojavLauncher/assets/java21/
-          cp layout/pe_controls.json $FCI_BUILD_DIR/PojavLauncher/assets/layout.json
-      - name: Build IPA
-        script: |
-          xcodebuild -project $XCODE_PROJECT \
-                     -scheme $XCODE_SCHEME \
-                     -sdk iphoneos \
-                     -configuration Release \
-                     archive -archivePath build/PojavLauncher.xcarchive
-          xcodebuild -exportArchive \
-                     -archivePath build/PojavLauncher.xcarchive \
-                     -exportOptionsPlist ExportOptions.plist \
-                     -exportPath build/IPA
-    artifacts:
-      - build/IPA/*.ipa
+        bundle_identifier: com.pojav.launcher
+        # Add credentials or code signing references here if needed
 
+scripts:
+  - name: Inject runtime and controls
+    script: |
+      echo "Injecting Java $JAVA_VERSION and $CONTROLS_LAYOUT layout..."
+      mkdir -p $FCI_BUILD_DIR/PojavLauncher/assets/java${JAVA_VERSION}/
+      cp -R resources/java${JAVA_VERSION}/* $FCI_BUILD_DIR/PojavLauncher/assets/java${JAVA_VERSION}/
+      cp layout/${CONTROLS_LAYOUT}_controls.json $FCI_BUILD_DIR/PojavLauncher/assets/layout.json
+
+  - name: Build Xcode project
+    script: |
+      echo "Archiving PojavLauncher..."
+      xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher \
+        -configuration Release archive -archivePath $FCI_BUILD_DIR/PojavLauncher.xcarchive
+      echo "Exporting IPA..."
+      xcodebuild -exportArchive -archivePath $FCI_BUILD_DIR/PojavLauncher.xcarchive \
+        -exportOptionsPlist ExportOptions.plist -exportPath $FCI_OUTPUT_DIR
+
+artifacts:
+  - build/PojavLauncher.ipa
 
 
