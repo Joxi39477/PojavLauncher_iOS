@@ -59,7 +59,15 @@
             NSLog(@"📁 Destination folder created: %@", destinationPath);
         }
     }
-    
+    #pragma mark - Runtime Configuration
+
+- (void)setActiveJavaRuntime:(NSString *)path {
+    NSDictionary *config = @{ @"custom_java_path" : path };
+    NSString *jsonPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/LaunchPreferences.json"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:config options:NSJSONWritingPrettyPrinted error:nil];
+    [jsonData writeToFile:jsonPath atomically:YES];
+}
+
     NSLog(@"📦 Extracting Java 21 tarball...");
 
     NSTask *task = [[NSTask alloc] init];
