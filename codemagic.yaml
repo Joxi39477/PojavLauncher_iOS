@@ -1,4 +1,7 @@
 
+
+
+
 workflows:
   ios-build:
     name: Build PojavLauncher iOS
@@ -9,6 +12,7 @@ workflows:
       ios_signing:
         distribution_type: ad-hoc
         bundle_identifier: net.kdt.pojavlaunch
+
     scripts:
       - name: Inject Java runtime and control layout
         script: |
