@@ -1,22 +1,24 @@
 
 
-
-
-
 workflows:
-  ios-workflow:
-    name: Build modded PojavLauncher
+  ios-build:
+    name: Build PojavLauncher with Java 21
     environment:
-      vars:
-        XCODE_WORKSPACE: "PojavLauncher.xcodeproj"
-        XCODE_SCHEME: "PojavLauncher"
       ios_signing:
         distribution_type: ad-hoc
-        bundle_identifier: com.your.bundle.id
+        bundle_identifier: com.joxi39477.pojavlauncher
+      vars:
+        XCODE_PROJECT: "PojavLauncher.xcodeproj"
+        XCODE_SCHEME: "PojavLauncher"
     scripts:
+      - name: Pre-build – Inject Java & Controls
+        script: |
+          echo "Injecting Java 21 runtime and PE layout..."
+          cp -R resources/java21/* $FCI_BUILD_DIR/PojavLauncher/assets/java21/
+          cp layout/pe_controls.json $FCI_BUILD_DIR/PojavLauncher/assets/layout.json
       - name: Build IPA
         script: |
-          xcodebuild -workspace $XCODE_WORKSPACE \
+          xcodebuild -project $XCODE_PROJECT \
                      -scheme $XCODE_SCHEME \
                      -sdk iphoneos \
                      -configuration Release \
@@ -27,3 +29,6 @@ workflows:
                      -exportPath build/IPA
     artifacts:
       - build/IPA/*.ipa
+
+
+
