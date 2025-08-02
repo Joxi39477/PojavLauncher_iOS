@@ -74,6 +74,20 @@
         NSLog(@"❌ Extraction failed: %@", exception);
     }
 }
+void showAlertWithTitle(NSString *title, NSString *message) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+
+    [alert addAction:okAction];
+
+    UIViewController *rootVC = UIApplication.sharedApplication.keyWindow.rootViewController;
+    [rootVC presentViewController:alert animated:YES completion:nil];
+}
 
 
 #define fm NSFileManager.defaultManager
