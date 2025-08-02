@@ -42,21 +42,39 @@
 + (void)extractJava21Tarball {
     NSString *tarballPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/jdk-21.0.7_macos-aarch64_bin.tar.gz"];
     NSString *destinationPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/java21"];
-
-    NSLog(@"Extracting Java 21 tarball...");
     
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    // 🔍 Create destination folder if it doesn't exist
+    if (![fileManager fileExistsAtPath:destinationPath]) {
+        NSError *createError = nil;
+        [fileManager createDirectoryAtPath:destinationPath
+               withIntermediateDirectories:YES
+                                attributes:nil
+                                     error:&createError];
+        if (createError) {
+            NSLog(@"❌ Failed to create destination folder: %@", createError);
+            return;
+        } else {
+            NSLog(@"📁 Destination folder created: %@", destinationPath);
+        }
+    }
+    
+    NSLog(@"📦 Extracting Java 21 tarball...");
+
     NSTask *task = [[NSTask alloc] init];
     task.launchPath = @"/usr/bin/tar";
     task.arguments = @[@"-xzf", tarballPath, @"-C", destinationPath];
-    
+
     @try {
         [task launch];
         [task waitUntilExit];
-        NSLog(@"Java 21 extraction completed with code %d", task.terminationStatus);
+        NSLog(@"✅ Java 21 extraction completed with code %d", task.terminationStatus);
     } @catch (NSException *exception) {
-        NSLog(@"Extraction failed: %@", exception);
+        NSLog(@"❌ Extraction failed: %@", exception);
     }
 }
+
 
 #define fm NSFileManager.defaultManager
 
