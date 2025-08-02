@@ -15,6 +15,12 @@
 #import "JavaLauncher.h"
 #import "LauncherPreferences.h"
 #import "PLProfiles.h"
+#pragma mark - Runtime Detection
+
++ (BOOL)java21TarballExists {
+    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/jdk-21.0.7_macos-aarch64_bin.tar.gz"];
+    return [[NSFileManager defaultManager] fileExistsAtPath:path];
+}
 
 #define fm NSFileManager.defaultManager
 
