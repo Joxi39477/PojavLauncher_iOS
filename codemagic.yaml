@@ -1,38 +1,15 @@
 
+
 workflows:
-  pojavlauncher-ios-build:
-    name: Build PojavLauncher with Java 21
+  build:
     environment:
-      vars:
-        JAVA_VERSION: "java-21-openjdk"
-        RUNTIME_PATH: "$CM_BUILD_DIR/java21"
-        LANG: "en_US.UTF-8"
-        LC_ALL: "en_US.UTF-8"
-
+      flutter: "stable"
     scripts:
-      - name: Inject Java Runtime
+      - name: Install dependencies
         script: |
-          echo "🔧 Injecting Java 21..."
-          mkdir -p $RUNTIME_PATH
-          cp -R $CM_SOURCE_DIR/java21/* $RUNTIME_PATH/
-          echo "✅ Runtime injected at $RUNTIME_PATH"
-
-      - name: Build with Xcode
+          flutter pub get
+      - name: Build APK
         script: |
-          cd ios
-          xcodebuild -workspace PojavLauncher.xcworkspace \
-            -scheme PojavLauncher \
-            -sdk iphoneos \
-            -configuration Release \
-            CODE_SIGN_IDENTITY="Apple Development" \
-            PROVISIONING_PROFILE_SPECIFIER="pojavlaunch-profile"
-
+          flutter build apk --release
     artifacts:
-      - build/**/PojavLauncher.ipa
-
-    export_options:
-      method: development
-      compileBitcode: false
-      signingStyle: automatic
-      provisioningProfiles:
-        net.kdt.pojavlaunch: "pojavlaunch-profile"
+      - "build/app/outputs/flutter-apk/app-release.apk"
