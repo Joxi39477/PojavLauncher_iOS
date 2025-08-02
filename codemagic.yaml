@@ -1,34 +1,24 @@
 
 
 
-workflows:
-  ios-build:
-    name: Build PojavLauncher iOS
-    environment:
-      vars:
-        JAVA_VERSION: "21"
-        CONTROLS_LAYOUT: "pe"
-      ios_signing:
-        distribution_type: ad-hoc
-        bundle_identifier: net.kdt.pojavlaunch
-
-    scripts:
-      - name: Inject Java runtime and control layout
-        script: |
-          echo "Injecting Java version $JAVA_VERSION and layout $CONTROLS_LAYOUT"
-          mkdir -p $CM_BUILD_DIR/resources/java$JAVA_VERSION
-          cp -R resources/java$JAVA_VERSION/* $CM_BUILD_DIR/PojavLauncher/app/src/main/java
-          cp layout/${CONTROLS_LAYOUT}_controls.json $CM_BUILD_DIR/PojavLauncher/app/src/main/assets/controls.json
-
-      - name: Build with Xcode
-        script: |
-          xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher \
-            -configuration Release archive -archivePath $CM_BUILD_DIR/PojavLauncher.xcarchive
-          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/PojavLauncher.xcarchive \
-            -exportOptionsPlist ExportOptions.plist -exportPath $CM_BUILD_DIR/build
-
-    artifacts:
-      - build/PojavLauncher.ipa
 
 
 
+distribution_type: development
+bundle_identifier: net.kdt.pojavlaunch
+
+ios:
+  build_settings:
+    method: development
+
+scripts:
+  - name: Inject Java runtime and control layout
+    script: |
+      echo "Injecting new version JAVA_VERSION and layout SCROLLS_LAYOUT"
+      sed -i -e "s|OLD_JAVA_VERSION|NEW_JAVA_VERSION|g" $SOURCE_DIR/JavaVersion.java
+      sed -i -e "s|OLD_SCROLLS_LAYOUT|NEW_SCROLLS_LAYOUT|g" $SOURCE_DIR/layouts/scrolls_layout.json
+
+  - name: build with Xcode
+    script: |
+      cd ios && xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher -sdk iphoneos -configuration Release archive -archivePath $BUILD_DIR/PojavLauncher.xcarchive
+      xcodebuild -exportArchive -archivePath $BUILD_DIR/PojavLauncher.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $BUILD_DIR/build
