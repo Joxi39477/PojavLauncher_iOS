@@ -1,17 +1,24 @@
 
-
 workflows:
   launcher-build:
     name: Launcher Build
     working_directory: ./launcher
     environment:
       flutter: stable
+
     scripts:
+      - name: Install Flutter
+        script: |
+          flutter --version
+
       - name: Install dependencies
         script: |
+          set -x
           flutter pub get
+
       - name: Build IPA
         script: |
           flutter build ipa
+
     artifacts:
       - build/ios/ipa/*.ipa
