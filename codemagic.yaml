@@ -30,11 +30,9 @@ workflows:
     artifacts:
       - build/**/PojavLauncher.ipa
 
-    ios:
-      build_settings:
-        export_options:
-          method: development
-          compileBitcode: false
-          signingStyle: automatic
-          provisioningProfiles:
-            net.kdt.pojavlaunch: "pojavlaunch-profile"
+    export_options:
+      method: development
+      compileBitcode: false
+      signingStyle: automatic
+      provisioningProfiles:
+        net.kdt.pojavlaunch: "pojavlaunch-profile"
