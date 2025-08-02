@@ -2,15 +2,18 @@
 
 
 
+
+
 workflows:
   build:
-    working_directory: launcher
+    name: Build iOS from launcher folder
+    working_directory: ./launcher
     scripts:
       - name: Install dependencies
         script: |
           flutter pub get
-      - name: Build iOS app
+      - name: Build IPA
         script: |
           flutter build ipa
     artifacts:
-      - build/ios/ipa/*.ipa
+      - "build/ios/ipa/*.ipa"
