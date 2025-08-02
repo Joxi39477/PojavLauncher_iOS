@@ -21,6 +21,24 @@
     NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/jdk-21.0.7_macos-aarch64_bin.tar.gz"];
     return [[NSFileManager defaultManager] fileExistsAtPath:path];
 }
++ (void)promptToActivateJava21 {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Java 21 Detected"
+                                                                   message:@"Would you like to activate the Java 21 runtime?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSLog(@"User chose to activate Java 21. Starting extraction...");
+        [JavaLauncher extractJava21Tarball];
+    }];
+
+    UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil];
+
+    [alert addAction:yesAction];
+    [alert addAction:noAction];
+
+    UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+    [rootViewController presentViewController:alert animated:YES completion:nil];
+}
 
 #define fm NSFileManager.defaultManager
 
