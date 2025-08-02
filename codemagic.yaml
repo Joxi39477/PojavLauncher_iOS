@@ -1,34 +1,36 @@
 
-environment:
-  JAVA_VERSION: "java-21-openjdk"
-  RUNTIME_PATH: "/var/mobile/Containers/Data/Application/<app-id>/Documents/PojavLauncher/.pojav/runtime/java-21-openjdk"
-  LANG: "en_US.UTF-8"
-  LC_ALL: "en_US.UTF-8"
 
-scripts:
-  pre_build:
-    - echo "🔧 Preparing runtime injection..."
-    - mkdir -p $RUNTIME_PATH
-    - cp -r ./java21_build/* $RUNTIME_PATH/
-    - echo "✅ Java 21 runtime injected at $RUNTIME_PATH"
-  post_build:
-    - echo "🚀 Build completed. Validating runtime..."
-    - ls $RUNTIME_PATH
-    - echo "🏁 Ready for launch!"
+workflows:
+  build_pojavlauncher:
+    name: "Build PojavLauncher with Java 21"
+    environment:
+      JAVA_VERSION: "java-21-openjdk"
+      RUNTIME_PATH: "/var/mobile/Containers/Data/Application/<app-id>/Documents/PojavLauncher/.pojav/runtime/java-21-openjdk"
+      LANG: "en_US.UTF-8"
+      LC_ALL: "en_US.UTF-8"
 
-ios:
-  build_settings:
-    method: development
-    export_options:
-      distribution_type: development
-      compileBitcode: false
-      signingStyle: automatic
-      provisioningProfiles:
-        com.yourcompany.PojavLauncher: "Your_Dev_Profile_Name"
+    scripts:
+      - name: Inject Java runtime and control layout
+        script: |
+          echo "🔧 Injecting Java 21 and layout..."
+          mkdir -p $RUNTIME_PATH
+          cp -r ./java21_build/* $RUNTIME_PATH/
+          sed -i -e "s|OLD_JAVA_VERSION|${JAVA_VERSION}|g" $SOURCE_DIR/JavaVersion.java
+          sed -i -e "s|OLD_SCROLLS_LAYOUT|pe_controls.json|g" $SOURCE_DIR/layouts/scrolls_layout.json
+          echo "✅ Injection complete at $RUNTIME_PATH"
 
-launcher_config:
-  launcher_distribution: custom
-  runtime_override: true
-  runtime_path: "${RUNTIME_PATH}"
-  runtime_type: jdk
-  validate_runtime: true
+      - name: Build with Xcode
+        script: |
+          cd ios
+          xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher -sdk iphoneos -configuration Release archive -archivePath $BUILD_DIR/PojavLauncher.xcarchive
+          xcodebuild -exportArchive -archivePath $BUILD_DIR/PojavLauncher.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $BUILD_DIR/build
+
+    ios:
+      build_settings:
+        method: development
+        export_options:
+          distribution_type: development
+          compileBitcode: false
+          signingStyle: automatic
+          provisioningProfiles:
+            net.kdt.pojavlaunch: "Your_Dev_Profile_Name"
