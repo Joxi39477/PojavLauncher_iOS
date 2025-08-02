@@ -1,5 +1,4 @@
 
-
 workflows:
   build_pojavlauncher:
     name: "Build PojavLauncher with Java 21"
@@ -25,7 +24,10 @@ workflows:
           xcodebuild -workspace PojavLauncher.xcworkspace -scheme PojavLauncher -sdk iphoneos -configuration Release archive -archivePath $BUILD_DIR/PojavLauncher.xcarchive
           xcodebuild -exportArchive -archivePath $BUILD_DIR/PojavLauncher.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $BUILD_DIR/build
 
-    ios:
+    artifacts:
+      - $BUILD_DIR/build/PojavLauncher.ipa
+
+    **ios:**  # ✅ This belongs directly under the workflow block
       build_settings:
         method: development
         export_options:
@@ -34,3 +36,4 @@ workflows:
           signingStyle: automatic
           provisioningProfiles:
             net.kdt.pojavlaunch: "Your_Dev_Profile_Name"
+
