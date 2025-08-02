@@ -3,7 +3,7 @@ workflows:
   ios-workflow:
     name: Build PojavLauncher iOS
     vars:
-      JAVA_VERSION: "21"
+      JAVA_VERSION: 21
       CONTROLS_LAYOUT: "pe"
     environment:
       ios_signing:
