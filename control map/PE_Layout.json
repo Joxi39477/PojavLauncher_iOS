@@ -1,0 +1,72 @@
+{
+  "controls": [
+    {
+      "type": "joystick",
+      "x": 40,
+      "y": 160,
+      "width": 120,
+      "height": 120,
+      "id": "joystick"
+    },
+    {
+      "type": "hotbar",
+      "x": 0.5,
+      "y": 0.95,
+      "anchor": "center",
+      "width": 300,
+      "height": 40,
+      "id": "hotbar"
+    },
+    {
+      "type": "button",
+      "id": "attack",
+      "x": 0.85,
+      "y": 0.85,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "button",
+      "id": "use",
+      "x": 0.72,
+      "y": 0.85,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "button",
+      "id": "jump",
+      "x": 0.85,
+      "y": 0.70,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "button",
+      "id": "sneak",
+      "x": 0.72,
+      "y": 0.70,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "image",
+      "id": "crosshair",
+      "x": 0.5,
+      "y": 0.5,
+      "width": 32,
+      "height": 32,
+      "anchor": "center",
+      "alpha": 0.8,
+      "image": "crosshair.png"
+    },
+    {
+      "type": "button",
+      "id": "pick_block",
+      "x": 0.68,
+      "y": 0.60,
+      "width": 60,
+      "height": 60
+    }
+  ]
+}
