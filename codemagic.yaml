@@ -1,7 +1,6 @@
 
 
 
-
 workflows:
   ios-build:
     name: Build PojavLauncher iOS
@@ -16,7 +15,7 @@ workflows:
     scripts:
       - name: Inject Java runtime and control layout
         script: |
-          echo "Using Java version $JAVA_VERSION and layout $CONTROLS_LAYOUT"
+          echo "Injecting Java version $JAVA_VERSION and layout $CONTROLS_LAYOUT"
           mkdir -p $CM_BUILD_DIR/resources/java$JAVA_VERSION
           cp -R resources/java$JAVA_VERSION/* $CM_BUILD_DIR/PojavLauncher/app/src/main/java
           cp layout/${CONTROLS_LAYOUT}_controls.json $CM_BUILD_DIR/PojavLauncher/app/src/main/assets/controls.json
@@ -30,5 +29,6 @@ workflows:
 
     artifacts:
       - build/PojavLauncher.ipa
+
 
 
