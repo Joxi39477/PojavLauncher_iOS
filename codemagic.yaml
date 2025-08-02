@@ -1,15 +1,16 @@
 
 
+
+
 workflows:
   build:
-    environment:
-      flutter: "stable"
+    working_directory: launcher
     scripts:
       - name: Install dependencies
         script: |
           flutter pub get
-      - name: Build APK
+      - name: Build iOS app
         script: |
-          flutter build apk --release
+          flutter build ipa
     artifacts:
-      - "build/app/outputs/flutter-apk/app-release.apk"
+      - build/ios/ipa/*.ipa
